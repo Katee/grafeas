@@ -3,3 +3,8 @@
 protoc
 .install.tools
 proto/**/.done
+
+artman-genfiles/
+google/
+grafeas/
+.php_cs.cache
