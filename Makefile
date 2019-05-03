@@ -23,7 +23,7 @@ CLEAN += .install.protoc-gen-go .install.grpc-gateway
 .install.grpc-gateway:
 	go get -u -v github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger && touch $@
 
-build: vet fmt go_protos swagger_docs
+build: fmt go_protos swagger_docs
 	go build -v ./...
 
 # http://golang.org/cmd/go/#hdr-Run_gofmt_on_package_sources
@@ -81,6 +81,24 @@ swagger_docs: proto/v1beta1/swagger/*.swagger.json
 proto/v1beta1/swagger/%.swagger.json: proto/v1beta1/%.proto protoc/bin/protoc .install.tools
 	$(PROTOC_CMD) --swagger_out=logtostderr=true:. $<
 	mv $(<D)/*.swagger.json $@
+
+gapic_v1:
+	# Move the proto files to match the packages. Python requires the path and package to match.
+	mkdir -p grafeas/v1
+	cp -a proto/v1/*.proto grafeas/v1/
+	# Ignore project.proto
+	rm grafeas/v1/project.proto
+	# Rewrite imports to the new location.
+	sed -i "s#import \"proto/v1/\(.*\).proto#import \"grafeas/v1/\1.proto#" grafeas/v1/*.proto
+	# Generate Python library using local patch.
+	artman --local --config artman_grafeas_v1.yaml generate python_gapic
+	# Generate libraries
+	artman --config artman_grafeas_v1.yaml generate csharp_gapic
+	artman --config artman_grafeas_v1.yaml generate go_gapic
+	artman --config artman_grafeas_v1.yaml generate java_gapic
+	artman --config artman_grafeas_v1.yaml generate nodejs_gapic
+	artman --config artman_grafeas_v1.yaml generate php_gapic
+	artman --config artman_grafeas_v1.yaml generate ruby_gapic
 
 clean:
 	go clean ./...
