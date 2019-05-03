@@ -14,11 +14,11 @@
 
 syntax = "proto3";
 
-package grafeas.v1.attestation;
+package grafeas.v1;
 
 option go_package = "github.com/grafeas/grafeas/proto/v1/attestation_go_proto";
 option java_multiple_files = true;
-option java_package = "io.grafeas.v1.attestation";
+option java_package = "io.grafeas.v1";
 option objc_class_prefix = "GRA";
 
 // DO NOT USE: UNDER HEAVY DEVELOPMENT.
@@ -93,7 +93,7 @@ message PgpSignedAttestation {
 // to attach an occurrence to a given note. It also provides a single point of
 // lookup to find all attached attestation occurrences, even if they don't all
 // live in the same project.
-message Authority {
+message AttestationNote {
   // This submessage provides human-readable hints about the purpose of the
   // authority. Because the name of a note acts as its resource reference, it is
   // important to disambiguate the canonical name of the Note (which might be a
@@ -112,7 +112,7 @@ message Authority {
 }
 
 // Details of an attestation occurrence.
-message Details {
+message AttestationOccurrence {
   // Required. Attestation for the resource.
   Attestation attestation = 1;
 }

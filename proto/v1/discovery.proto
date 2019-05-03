@@ -14,11 +14,11 @@
 
 syntax = "proto3";
 
-package grafeas.v1.discovery;
+package grafeas.v1;
 
 option go_package = "github.com/grafeas/grafeas/proto/v1/discovery_go_proto";
 option java_multiple_files = true;
-option java_package = "io.grafeas.v1.discovery";
+option java_package = "io.grafeas.v1";
 option objc_class_prefix = "GRA";
 
 import "google/protobuf/timestamp.proto";
@@ -38,8 +38,12 @@ message Discovery {
 }
 
 // Details of a discovery occurrence.
-message Details {
+message DiscoveryOccurrence {
   // Required. Analysis status for the discovered resource.
+  Discovered discovered = 1;
+}
+
+message DiscoveryNote {
   Discovered discovered = 1;
 }
 
